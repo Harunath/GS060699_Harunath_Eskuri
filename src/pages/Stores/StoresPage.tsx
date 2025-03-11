@@ -73,9 +73,11 @@ const StoresPage = () => {
 		);
 	}
 	if (error) {
-		<div className="h-10/12 w-full flex justify-center bg-white">
-			<p className="text-5xl">error : {error}</p>
-		</div>;
+		return (
+			<div className="h-10/12 w-full flex justify-center items-center bg-white">
+				<p className="text-5xl">{error}</p>
+			</div>
+		);
 	}
 	return (
 		<div className="h-10/12 w-full">
