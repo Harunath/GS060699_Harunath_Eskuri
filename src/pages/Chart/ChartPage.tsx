@@ -43,7 +43,6 @@ const processPlanningData = (planningData: PlanningData[]) => {
 			? (values.gmDollars / values.salesDollars) * 100
 			: 0,
 	}));
-	console.log(chartData);
 	return chartData;
 };
 

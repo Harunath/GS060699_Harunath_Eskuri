@@ -95,8 +95,9 @@ const PlanningPage = () => {
 	};
 	if (error) {
 		return (
-			<div className="h-10/12 w-full flex justify-center bg-white">
-				<p className="text-5xl">error : {error}</p>
+			<div className="h-10/12 w-full flex flex-col items-center justify-center bg-white">
+				<p className="text-5xl">Failed to load</p>
+				<p>check you interbet connnection.</p>
 			</div>
 		);
 	}

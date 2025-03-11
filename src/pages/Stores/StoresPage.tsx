@@ -61,7 +61,6 @@ const StoresPage = () => {
 	]);
 	useEffect(() => {
 		fetchData();
-		console.log(data);
 	}, []);
 
 	if (loading) {
