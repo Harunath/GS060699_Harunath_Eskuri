@@ -10,7 +10,7 @@
 		{
 			"icons": [
 				{
-					"src": "/icons/logo.png",
+					"src": "./icons/logo.png",
 					"sizes": "192x192",
 					"type": "image/png"
 				}

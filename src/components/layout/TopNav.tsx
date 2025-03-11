@@ -1,5 +1,5 @@
 import { UserCircle } from "lucide-react";
-import logo from "../../assets/Gsynergy Logo V2 Long Description.svg";
+import logo from "/logo.png";
 
 const TopNav = () => {
 	return (
