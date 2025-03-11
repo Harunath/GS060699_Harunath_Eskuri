@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { create } from "zustand";
+import { api } from "../lib/constants";
 
 export interface StoreType {
 	""?: () => ReactNode;
@@ -27,7 +28,7 @@ export const useStoreStore = create<StoreState>((set) => ({
 		set({ loading: true, error: null });
 
 		try {
-			const res = await fetch("http://localhost:5000/api/store");
+			const res = await fetch(`${api}/store`);
 			if (!res.ok) throw new Error("Failed to fetch store data");
 
 			const jsonData: StoreType[] = await res.json();

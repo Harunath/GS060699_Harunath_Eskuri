@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { create } from "zustand";
+import { api } from "../lib/constants";
 
 export interface SKUType {
 	""?: () => ReactNode;
@@ -25,7 +26,7 @@ export const useSKUStore = create<SKUStore>((set) => ({
 	fetchData: async () => {
 		set({ loading: true, error: null });
 		try {
-			const res = await fetch("http://localhost:5000/api/sku");
+			const res = await fetch(`${api}/sku`);
 			const jsonData = await res.json();
 			set({ data: jsonData });
 			set({ loading: false, error: null });

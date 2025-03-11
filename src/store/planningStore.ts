@@ -1,5 +1,5 @@
 import { create } from "zustand";
-const api = "http://localhost:5000/api";
+import { api } from "../lib/constants";
 
 interface WeekData {
 	weekNO: number;
