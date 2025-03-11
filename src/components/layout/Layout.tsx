@@ -5,16 +5,16 @@ import SideNav from "./SideNav";
 
 const Layout: React.FC = () => {
 	return (
-		<div className="flex flex-col h-screen">
+		<div className="flex flex-col h-screen min-w-[1080px]">
 			{/* Top Navigation */}
 			<TopNav />
 
-			<div className="flex flex-1">
+			<div className="flex flex-1" style={{ height: "calc(100% - 64px)" }}>
 				{/* Side Navigation */}
 				<SideNav />
 
 				{/* Page Content */}
-				<main className="flex-1 p-6 overflow-auto bg-gray-100">
+				<main className="flex-1 p-6 bg-gray-100">
 					<Outlet />
 				</main>
 			</div>

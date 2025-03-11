@@ -5,73 +5,73 @@ import {
 	AllCommunityModule,
 	themeAlpine,
 } from "ag-grid-community";
-import { ReactNode, useState } from "react";
+import { useEffect, useState } from "react";
+import { SKUType, useSKUStore } from "../../store/skuStore";
 import { Trash2 } from "lucide-react";
+import { MessageLoading } from "../../components/ui/message-loading";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
-
-interface storeType {
-	""?: () => ReactNode;
-	id: string;
-	SKU: string;
-	Price: string;
-	Cost: string;
-}
 
 const DelIcon = () => {
 	return <Trash2 className="h-full" />;
 };
 
 const SKUsPage = () => {
-	const [rowData, setRowData] = useState<storeType[]>([
+	const { data, loading, error, setData, fetchData } = useSKUStore();
+	useEffect(() => {
+		fetchData();
+	}, []);
+	const [columnDefs] = useState<ColDef<SKUType>[]>([
 		{
-			id: "SK00158",
-			SKU: "Crew Neck Merino Wool Sweater",
-			Price: " $ 114.99 ",
-			Cost: " $ 18.28 ",
-		},
-		{
-			id: "SK00269",
-			SKU: "Faux Leather Leggings",
-			Price: " $ 9.99 ",
-			Cost: " $ 8.45 ",
-		},
-		{
-			id: "SK00300",
-			SKU: "Fleece-Lined Parka",
-			Price: " $ 199.99 ",
-			Cost: " $ 17.80 ",
-		},
-		{
-			id: "SK00304",
-			SKU: "Cotton Polo Shirt",
-			Price: " $ 139.99 ",
-			Cost: " $ 10.78 ",
-		},
-	]);
-	const [columnDefs, setColumnDefs] = useState<ColDef<storeType>[]>([
-		{
-			field: undefined,
+			headerName: "",
 			cellRenderer: DelIcon,
-			onCellClicked: (event) =>
-				setRowData((prev) => prev.filter((ele) => ele.id != event.data?.id)),
+			onCellClicked: (event) => {
+				const updatedData = data.filter((ele) => ele.id !== event.data?.id);
+				setData(updatedData);
+			},
+			pinned: "left",
+			maxWidth: 100,
 		},
-		{ field: "id", hide: true },
-		{ field: "SKU" },
-		{ field: "Price" },
-		{ field: "Cost" },
+		{ headerName: "id", hide: true },
+		{ field: "label", headerName: "SKU", pinned: "left" },
+		{
+			field: "price",
+			headerName: "Price",
+			valueFormatter: (params) => "$ " + parseFloat(params.value).toFixed(2),
+		},
+		{
+			field: "cost",
+			headerName: "Cost",
+			valueFormatter: (params) => "$ " + parseFloat(params.value).toFixed(2),
+		},
 	]);
+	if (loading) {
+		return (
+			<div className="h-10/12 w-full flex justify-center items-center bg-white">
+				<p className="text-5xl">
+					<MessageLoading />
+				</p>
+			</div>
+		);
+	}
+	if (error) {
+		<div className="h-10/12 w-full flex justify-center bg-white">
+			<p className="text-5xl">error : {error}</p>
+		</div>;
+	}
 	return (
-		<div className="h-10/12 w-full">
+		<div className="h-10/12 w-full bg-white">
 			<AgGridReact
 				theme={themeAlpine}
-				rowData={rowData}
+				rowData={data}
 				columnDefs={columnDefs}
 				defaultColDef={{
 					filter: true,
 				}}
 			/>
-			<div className="h-2/12 bg-gray-100 w-full flex items-center"></div>
+			<div className="h-2/12 bg-gray-100 w-full flex items-center">
+				<button className=" py-2 px-4 bg-orange-300 rounded">Add SKU</button>
+			</div>
 		</div>
 	);
 };

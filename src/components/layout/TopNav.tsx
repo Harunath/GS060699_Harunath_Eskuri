@@ -3,7 +3,7 @@ import logo from "../../assets/Gsynergy Logo V2 Long Description.svg";
 
 const TopNav = () => {
 	return (
-		<nav className="w-full flex items-center justify-between px-6 py-2 bg-white shadow-md min-w-[320px] min-h-16">
+		<nav className="w-full flex items-center justify-between px-6 py-2 bg-white shadow-md min-w-[1080px] min-h-16">
 			{/* Left Side - Logo */}
 			<div className="flex items-center space-x-2">
 				<img src={logo} alt="GSynergy" className="h-12" />
