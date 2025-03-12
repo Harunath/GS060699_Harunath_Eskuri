@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { api } from "../lib/constants";
+import Cookies from "js-cookie";
 
 interface WeekData {
 	weekNO: number;
@@ -24,7 +25,6 @@ interface StoreType {
 	Store: string;
 	name: string;
 }
-
 export interface PlanningData {
 	Store: StoreType;
 	SKU: SKUType;
@@ -51,12 +51,22 @@ export const usePlanningStore = create<PlanningStore>((set) => ({
 	fetchStoreData: async (store: string) => {
 		set({ loading: true, error: null });
 		try {
+			const token = Cookies.get("token");
+
 			const res = await fetch(`${api}/planning/store`, {
 				method: "POST",
 				body: JSON.stringify({ store }),
-				headers: { "Content-Type": "application/json" },
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
 			});
-			if (!res.ok) throw new Error("Failed to fetch planning data");
+			if (!res.ok) {
+				if (res.status == 401) {
+					Cookies.remove("token");
+					throw new Error("Unauthorized");
+				} else throw new Error("Failed to fetch planning data");
+			}
 			const data: PlanningData[] = await res.json();
 			set({ data, loading: false });
 		} catch (error) {
@@ -69,8 +79,19 @@ export const usePlanningStore = create<PlanningStore>((set) => ({
 	fetchData: async () => {
 		set({ loading: true, error: null });
 		try {
-			const res = await fetch(`${api}/planning/store`);
-			if (!res.ok) throw new Error("Failed to fetch planning data");
+			const token = Cookies.get("token");
+			const res = await fetch(`${api}/planning/store`, {
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			if (!res.ok) {
+				if (res.status == 401) {
+					Cookies.remove("token");
+					throw new Error("Unauthorized");
+				} else throw new Error("Failed to fetch planning data");
+			}
 			const data: PlanningData[] = await res.json();
 			set({ data, loading: false });
 		} catch (error) {

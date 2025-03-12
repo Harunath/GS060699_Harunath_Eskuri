@@ -8,7 +8,8 @@ import {
 import { useEffect, useState } from "react";
 import { SKUType, useSKUStore } from "../../store/skuStore";
 import { Trash2 } from "lucide-react";
-import { MessageLoading } from "../../components/ui/message-loading";
+import Loading from "../../components/common/Loading";
+import ErrorPage from "../../components/common/ErrorPage";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -45,20 +46,8 @@ const SKUsPage = () => {
 			valueFormatter: (params) => "$ " + parseFloat(params.value).toFixed(2),
 		},
 	]);
-	if (loading) {
-		return (
-			<div className="h-10/12 w-full flex justify-center items-center bg-white">
-				<p className="text-5xl">
-					<MessageLoading />
-				</p>
-			</div>
-		);
-	}
-	if (error) {
-		<div className="h-10/12 w-full flex justify-center bg-white">
-			<p className="text-5xl">error : {error}</p>
-		</div>;
-	}
+	if (loading) <Loading />;
+	if (error) <ErrorPage error={error} />;
 	return (
 		<div className="h-10/12 w-full bg-white">
 			<AgGridReact

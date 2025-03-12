@@ -8,7 +8,8 @@ import {
 import { useEffect, useState } from "react";
 import { Trash2 } from "lucide-react";
 import { useStoreStore, StoreType } from "../../store/storeStore";
-import { MessageLoading } from "../../components/ui/message-loading";
+import Loading from "../../components/common/Loading";
+import ErrorPage from "../../components/common/ErrorPage";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -63,22 +64,8 @@ const StoresPage = () => {
 		fetchData();
 	}, []);
 
-	if (loading) {
-		return (
-			<div className="h-10/12 w-full flex justify-center items-center bg-white">
-				<p className="text-5xl">
-					<MessageLoading />
-				</p>
-			</div>
-		);
-	}
-	if (error) {
-		return (
-			<div className="h-10/12 w-full flex justify-center items-center bg-white">
-				<p className="text-5xl">{error}</p>
-			</div>
-		);
-	}
+	if (loading) <Loading />;
+	if (error) <ErrorPage error={error} />;
 	return (
 		<div className="h-10/12 w-full">
 			<AgGridReact

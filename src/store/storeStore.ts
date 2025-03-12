@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { create } from "zustand";
 import { api } from "../lib/constants";
+import Cookies from "js-cookie";
 
 export interface StoreType {
 	""?: () => ReactNode;
@@ -18,7 +19,6 @@ interface StoreState {
 	fetchData: () => Promise<void>; // Function to fetch data
 	setData: (data: StoreType[]) => void; // Function to manually set data
 }
-
 export const useStoreStore = create<StoreState>((set) => ({
 	data: [],
 	loading: false,
@@ -28,8 +28,19 @@ export const useStoreStore = create<StoreState>((set) => ({
 		set({ loading: true, error: null });
 
 		try {
-			const res = await fetch(`${api}/store`);
-			if (!res.ok) throw new Error("Failed to fetch store data");
+			const token = Cookies.get("token");
+			const res = await fetch(`${api}/store`, {
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			if (!res.ok) {
+				if (res.status == 401) {
+					Cookies.remove("token");
+					throw new Error("Unauthorized");
+				} else throw new Error("Failed to fetch planning data");
+			}
 
 			const jsonData: StoreType[] = await res.json();
 			set({ data: jsonData, loading: false });

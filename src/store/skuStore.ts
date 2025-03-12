@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { create } from "zustand";
 import { api } from "../lib/constants";
+import Cookies from "js-cookie";
 
 export interface SKUType {
 	""?: () => ReactNode;
@@ -26,7 +27,20 @@ export const useSKUStore = create<SKUStore>((set) => ({
 	fetchData: async () => {
 		set({ loading: true, error: null });
 		try {
-			const res = await fetch(`${api}/sku`);
+			const token = Cookies.get("token");
+
+			const res = await fetch(`${api}/sku`, {
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			if (!res.ok) {
+				if (res.status == 401) {
+					Cookies.remove("token");
+					throw new Error("Unauthorized");
+				} else throw new Error("Failed to fetch planning data");
+			}
 			const jsonData = await res.json();
 			set({ data: jsonData });
 			set({ loading: false, error: null });

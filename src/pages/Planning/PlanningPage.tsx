@@ -4,7 +4,8 @@ import type { ColDef, ColGroupDef } from "ag-grid-community";
 import { useEffect } from "react";
 import { usePlanningStore, PlanningData } from "../../store/planningStore";
 import { useStoreStore } from "../../store/storeStore";
-import { MessageLoading } from "../../components/ui/message-loading";
+import Loading from "../../components/common/Loading";
+import ErrorPage from "../../components/common/ErrorPage";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -68,7 +69,6 @@ const PlanningPage = () => {
 								params.value != null
 									? `$ ${params.value.toFixed(2)}`
 									: "$ 0.00",
-							onCellClicked: (params) => console.log(params.data),
 						},
 						{
 							headerName: "GM %",
@@ -93,14 +93,9 @@ const PlanningPage = () => {
 
 		return columnDefs;
 	};
-	if (error) {
-		return (
-			<div className="h-10/12 w-full flex flex-col items-center justify-center bg-white">
-				<p className="text-5xl">Failed to load</p>
-				<p>check you interbet connnection.</p>
-			</div>
-		);
-	}
+
+	if (loading) <Loading />;
+	if (error) <ErrorPage error={error} />;
 	return (
 		<div className="h-full w-full overflow-auto bg-white p-2 rounded">
 			<div className="mb-4">
@@ -120,22 +115,13 @@ const PlanningPage = () => {
 				</select>
 			</div>
 			<div className="h-[500px] w-full overflow-x-auto text-black">
-				{loading && (
-					<div className="h-10/12 w-full flex justify-center items-center bg-white">
-						<p className="text-5xl">
-							<MessageLoading />
-						</p>
-					</div>
-				)}
-				{!loading && (
-					<AgGridReact
-						rowData={data}
-						columnDefs={generateColumnDefs(data)}
-						defaultColDef={{ flex: 1, resizable: true, minWidth: 100 }}
-						className="ag-theme-alpine"
-						domLayout="autoHeight"
-					/>
-				)}
+				<AgGridReact
+					rowData={data}
+					columnDefs={generateColumnDefs(data)}
+					defaultColDef={{ flex: 1, resizable: true, minWidth: 100 }}
+					className="ag-theme-alpine"
+					domLayout="autoHeight"
+				/>
 			</div>
 		</div>
 	);

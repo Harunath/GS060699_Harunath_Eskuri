@@ -15,6 +15,8 @@ import { useEffect, useState } from "react";
 import { PlanningData } from "../../store/planningStore";
 import { useStoreStore } from "../../store/storeStore";
 import { MessageLoading } from "../../components/ui/message-loading";
+import Loading from "../../components/common/Loading";
+import ErrorPage from "../../components/common/ErrorPage";
 
 const processPlanningData = (planningData: PlanningData[]) => {
 	const weeklyData: Record<
@@ -60,8 +62,14 @@ const CustomTooltip = ({ active, payload }: TooltipProps<number, string>) => {
 };
 
 const ChartPage = () => {
-	const { data, selectedStore, setSelectedStore, fetchStoreData, loading } =
-		usePlanningStore();
+	const {
+		data,
+		selectedStore,
+		setSelectedStore,
+		fetchStoreData,
+		loading,
+		error,
+	} = usePlanningStore();
 	const stores = useStoreStore((state) => state.data);
 	const fetchStores = useStoreStore((state) => state.fetchData);
 	const [processedData, setProcessedData] = useState<
@@ -87,6 +95,8 @@ const ChartPage = () => {
 		}
 	}, [data]);
 
+	if (loading) <Loading />;
+	if (error) <ErrorPage error={error} />;
 	return (
 		<div>
 			<div className="mb-4 w-fit">
