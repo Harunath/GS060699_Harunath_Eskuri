@@ -29,7 +29,7 @@ export const useStoreStore = create<StoreState>((set) => ({
 
 		try {
 			const token = Cookies.get("token");
-			const res = await fetch(new URL("/store", api).toString(), {
+			const res = await fetch(`${api}/store`, {
 				headers: {
 					"Content-Type": "application/json",
 					Authorization: `Bearer ${token}`,
