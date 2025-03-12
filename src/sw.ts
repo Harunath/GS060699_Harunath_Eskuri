@@ -38,7 +38,7 @@ registerRoute(
 
 registerRoute(
 	({ url }) => url.pathname.startsWith(`${API_BASE_URL}/api/user`),
-	new NetworkFirst({ cacheName: "api/profile" })
+	new NetworkFirst({ cacheName: "api/user" })
 );
 
 registerRoute(
