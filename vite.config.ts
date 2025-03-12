@@ -18,6 +18,7 @@ export default defineConfig({
 			registerType: "autoUpdate",
 			injectManifest: {
 				swDest: "dist/sw.js",
+				maximumFileSizeToCacheInBytes: 15 * 1024 * 1024,
 			},
 			manifest: {
 				name: "Data Viewer",

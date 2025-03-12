@@ -10,7 +10,7 @@ import ErrorPage from "../../components/common/ErrorPage";
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 const PlanningPage = () => {
-	const { data, loading, error, fetchStoreData, fetchData } =
+	const { data, setData, loading, error, fetchStoreData, fetchData } =
 		usePlanningStore();
 	const stores = useStoreStore((state) => state.data);
 	const fetchStore = useStoreStore((state) => state.fetchData);
@@ -44,6 +44,60 @@ const PlanningPage = () => {
 						{
 							headerName: "Sales Units",
 							type: "numericColumn",
+							editable: true,
+							valueSetter: (params) => {
+								params.data.months[monthIndex].weeks[weekIndex].salesUnits =
+									Math.floor(Number(params.newValue) || 0);
+								return true;
+							},
+							onCellValueChanged: (event) => {
+								const updatedData = data.map((ele) => {
+									if (
+										ele.Store.Store === event.data?.Store?.Store &&
+										ele.SKU.SKU === event.data?.SKU?.SKU
+									) {
+										return {
+											...ele,
+											months: ele.months.map((month, mIdx) =>
+												mIdx === monthIndex
+													? {
+															...month,
+															weeks: month.weeks.map((week, wIdx) => {
+																return wIdx === weekIndex
+																	? {
+																			...week,
+																			costDollars:
+																				Number(ele.SKU.cost) *
+																				Number(event.newValue),
+																			gmDollars:
+																				(Number(ele.SKU.price) -
+																					Number(ele.SKU.cost)) *
+																				Number(event.newValue),
+																			gmPercentage:
+																				(((Number(ele.SKU.price) -
+																					Number(ele.SKU.cost)) *
+																					Number(event.newValue)) /
+																					Number(ele.SKU.price)) *
+																				100,
+																			salesDollars:
+																				Number(ele.SKU.price) *
+																				Number(event.newValue),
+																			salesUnits: Number(event.newValue),
+																			weekNO: weekIndex,
+																	  }
+																	: week;
+															}),
+													  }
+													: month
+											),
+										};
+									}
+									return ele; // ✅ Important: Return unchanged objects
+								});
+
+								setData(updatedData);
+							},
+
 							valueGetter: (params) =>
 								params.data?.months?.[monthIndex]?.weeks?.[weekIndex]
 									?.salesUnits ?? 0,

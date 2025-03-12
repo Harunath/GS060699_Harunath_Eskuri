@@ -19,6 +19,8 @@ interface MonthData {
 interface SKUType {
 	SKU: string;
 	name: string;
+	price: string;
+	cost: string;
 }
 
 interface StoreType {

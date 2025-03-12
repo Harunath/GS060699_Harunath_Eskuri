@@ -25,7 +25,6 @@ registerRoute(
 
 // Cache API calls for offline use
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-console.log({ API_BASE_URL });
 registerRoute(
 	({ url }) => url.pathname.startsWith(`${API_BASE_URL}/api/store`),
 	new NetworkFirst({ cacheName: "api/store" })

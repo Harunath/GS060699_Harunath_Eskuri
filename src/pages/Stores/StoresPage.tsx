@@ -10,6 +10,7 @@ import { Trash2 } from "lucide-react";
 import { useStoreStore, StoreType } from "../../store/storeStore";
 import Loading from "../../components/common/Loading";
 import ErrorPage from "../../components/common/ErrorPage";
+import AddNewStore from "./AddNewStore";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -19,14 +20,13 @@ const DelIcon = () => {
 
 const StoresPage = () => {
 	const { data, loading, error, fetchData, setData } = useStoreStore();
+	const [open, setOpen] = useState(false);
 	const [columnDefs] = useState<ColDef<StoreType>[]>([
 		{
 			headerName: "",
 			cellRenderer: DelIcon,
 			onCellClicked: (event) => {
-				const updatedData = data.filter(
-					(ele) => ele["S no"] !== event.data?.["S no"]
-				);
+				const updatedData = data.filter((ele) => ele.id !== event.data?.id);
 				setData(updatedData);
 			},
 			pinned: "left",
@@ -44,6 +44,16 @@ const StoresPage = () => {
 			headerName: "Store",
 			width: 200,
 			pinned: "left",
+			editable: true,
+			onCellValueChanged: (event) => {
+				console.log(event.newValue);
+				const updatedData = data.map((ele) =>
+					ele.id === event.data.id
+						? { ...ele, label: event.newValue || ele.label }
+						: ele
+				);
+				setData(updatedData);
+			},
 		},
 		{
 			field: "city",
@@ -68,6 +78,7 @@ const StoresPage = () => {
 	if (error) <ErrorPage error={error} />;
 	return (
 		<div className="h-10/12 w-full">
+			{open && <AddNewStore close={() => setOpen(false)} />}
 			<AgGridReact
 				theme={themeAlpine}
 				rowData={data}
@@ -76,7 +87,13 @@ const StoresPage = () => {
 					filter: true,
 				}}
 			/>
-			<div className="h-2/12 bg-gray-100 w-full flex items-center"></div>
+			<div className="h-2/12 bg-gray-100 w-full flex items-center">
+				<button
+					onClick={() => setOpen(true)}
+					className=" py-2 px-4 bg-orange-300 rounded">
+					Add Store
+				</button>
+			</div>
 		</div>
 	);
 };
