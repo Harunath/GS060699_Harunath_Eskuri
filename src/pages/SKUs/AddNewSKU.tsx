@@ -13,6 +13,13 @@ const AddNewSKU = ({ close }: { close: () => void }) => {
 	});
 	const handleUpdate = () => {
 		setData([...data, newData]);
+		setNewData({
+			id: "",
+			label: "",
+			price: "",
+			cost: "",
+		});
+		close();
 	};
 	return (
 		<DialogCard>
