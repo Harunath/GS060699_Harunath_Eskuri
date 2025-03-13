@@ -17,7 +17,7 @@ interface StoreState {
 	loading: boolean; // Loading state
 	error: string | null; // Error message
 	fetchData: () => Promise<void>; // Function to fetch data
-	setData: (data: StoreType[]) => void; // Function to manually set data
+	setData: (data: StoreType[] | ((prev: StoreType[]) => StoreType[])) => void; // Function to manually set data
 }
 export const useStoreStore = create<StoreState>((set) => ({
 	data: [],
@@ -52,5 +52,8 @@ export const useStoreStore = create<StoreState>((set) => ({
 		}
 	},
 
-	setData: (data: StoreType[]) => set({ data }),
+	setData: (data: StoreType[] | ((prev: StoreType[]) => StoreType[])) =>
+		set((state) => ({
+			data: typeof data === "function" ? data(state.data) : data,
+		})),
 }));

@@ -29,8 +29,12 @@ const SKUsPage = () => {
 			headerName: "",
 			cellRenderer: DelIcon,
 			onCellClicked: (event) => {
-				const updatedData = data.filter((ele) => ele.id !== event.data?.id);
-				setData(updatedData);
+				setData((prevData: SKUType[]) => {
+					const updatedData = prevData.filter(
+						(ele) => ele.id !== event.data?.id
+					);
+					return updatedData;
+				});
 			},
 			pinned: "left",
 			maxWidth: 100,
@@ -42,12 +46,14 @@ const SKUsPage = () => {
 			pinned: "left",
 			editable: true,
 			onCellValueChanged: (event) => {
-				const updatedData = data.map((ele) =>
-					ele.id === event.data.id
-						? { ...ele, label: String(event.newValue) || ele.label }
-						: ele
-				);
-				setData(updatedData);
+				setData((prevData: SKUType[]) => {
+					const updatedData = prevData.map((ele) =>
+						ele.id === event.data.id
+							? { ...ele, label: String(event.newValue) || ele.label }
+							: ele
+					);
+					return updatedData;
+				});
 			},
 		},
 		{
@@ -55,12 +61,17 @@ const SKUsPage = () => {
 			headerName: "Price",
 			editable: true,
 			onCellValueChanged: (event) => {
-				const updatedData = data.map((ele) =>
-					ele.id === event.data.id
-						? { ...ele, price: String(parseFloat(event.newValue)) || ele.price }
-						: ele
-				);
-				setData(updatedData);
+				setData((prevData: SKUType[]) => {
+					const updatedData = prevData.map((ele) =>
+						ele.id === event.data.id
+							? {
+									...ele,
+									price: String(parseFloat(event.newValue)) || ele.price,
+							  }
+							: ele
+					);
+					return updatedData;
+				});
 			},
 			valueFormatter: (params) => "$ " + parseFloat(params.value).toFixed(2),
 		},
@@ -69,12 +80,14 @@ const SKUsPage = () => {
 			headerName: "Cost",
 			editable: true,
 			onCellValueChanged: (event) => {
-				const updatedData = data.map((ele) =>
-					ele.id === event.data.id
-						? { ...ele, cost: String(parseFloat(event.newValue)) || ele.cost }
-						: ele
-				);
-				setData(updatedData);
+				setData((prevData: SKUType[]) => {
+					const updatedData = prevData.map((ele) =>
+						ele.id === event.data.id
+							? { ...ele, cost: String(parseFloat(event.newValue)) || ele.cost }
+							: ele
+					);
+					return updatedData;
+				});
 			},
 			valueFormatter: (params) => "$ " + parseFloat(params.value).toFixed(2),
 		},

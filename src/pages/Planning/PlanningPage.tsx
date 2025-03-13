@@ -74,9 +74,8 @@ const PlanningPage = () => {
 																					Number(ele.SKU.cost)) *
 																				Number(event.newValue),
 																			gmPercentage:
-																				(((Number(ele.SKU.price) -
-																					Number(ele.SKU.cost)) *
-																					Number(event.newValue)) /
+																				((Number(ele.SKU.price) -
+																					Number(ele.SKU.cost)) /
 																					Number(ele.SKU.price)) *
 																				100,
 																			salesDollars:

@@ -15,7 +15,7 @@ interface SKUStore {
 	data: SKUType[];
 	loading: boolean; // Loading state
 	error: string | null; // Error message
-	setData: (newData: SKUType[]) => void;
+	setData: (data: SKUType[] | ((prev: SKUType[]) => SKUType[])) => void;
 	fetchData: () => Promise<void>;
 }
 
@@ -23,7 +23,10 @@ export const useSKUStore = create<SKUStore>((set) => ({
 	data: [],
 	loading: false, // Loading state
 	error: null, // Error message
-	setData: (newData) => set({ data: newData }),
+	setData: (data: SKUType[] | ((prev: SKUType[]) => SKUType[])) =>
+		set((state) => ({
+			data: typeof data === "function" ? data(state.data) : data,
+		})),
 	fetchData: async () => {
 		set({ loading: true, error: null });
 		try {

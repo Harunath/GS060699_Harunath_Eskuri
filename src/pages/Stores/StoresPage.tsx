@@ -26,8 +26,12 @@ const StoresPage = () => {
 			headerName: "",
 			cellRenderer: DelIcon,
 			onCellClicked: (event) => {
-				const updatedData = data.filter((ele) => ele.id !== event.data?.id);
-				setData(updatedData);
+				setData((prevData: StoreType[]) => {
+					const updatedData = prevData.filter(
+						(ele) => ele.id !== event.data?.id
+					);
+					return updatedData;
+				});
 			},
 			pinned: "left",
 			maxWidth: 100,
@@ -46,13 +50,14 @@ const StoresPage = () => {
 			pinned: "left",
 			editable: true,
 			onCellValueChanged: (event) => {
-				console.log(event.newValue);
-				const updatedData = data.map((ele) =>
-					ele.id === event.data.id
-						? { ...ele, label: event.newValue || ele.label }
-						: ele
-				);
-				setData(updatedData);
+				setData((prevData: StoreType[]) => {
+					const updatedData = prevData.map((ele) =>
+						ele.id === event.data.id
+							? { ...ele, label: event.newValue || ele.label }
+							: ele
+					);
+					return updatedData;
+				});
 			},
 		},
 		{
