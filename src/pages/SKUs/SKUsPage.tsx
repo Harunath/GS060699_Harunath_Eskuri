@@ -11,6 +11,8 @@ import { Trash2 } from "lucide-react";
 import Loading from "../../components/common/Loading";
 import ErrorPage from "../../components/common/ErrorPage";
 import AddNewSKU from "./AddNewSKU";
+import { api } from "../../lib/constants";
+import Cookies from "js-cookie";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -22,8 +24,25 @@ const SKUsPage = () => {
 	const { data, loading, error, setData, fetchData } = useSKUStore();
 	const [open, setOpen] = useState(false);
 	useEffect(() => {
-		fetchData();
+		if (data.length == 0) fetchData();
 	}, []);
+
+	const updatSKU = async (id: string, price: number) => {
+		const token = Cookies.get("token");
+		if (id && token) {
+			console.log(price, "price");
+			const res = fetch(`${api}/sku/${id}`, {
+				method: "PUT",
+				body: JSON.stringify({ price }),
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			console.log(res);
+			fetchData();
+		} else return;
+	};
 	const [columnDefs] = useState<ColDef<SKUType>[]>([
 		{
 			headerName: "",
@@ -61,6 +80,8 @@ const SKUsPage = () => {
 			headerName: "Price",
 			editable: true,
 			onCellValueChanged: (event) => {
+				console.log(event.data.id);
+				updatSKU(event.data.id, event.newValue);
 				setData((prevData: SKUType[]) => {
 					const updatedData = prevData.map((ele) =>
 						ele.id === event.data.id
