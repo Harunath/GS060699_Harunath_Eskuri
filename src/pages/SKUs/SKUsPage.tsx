@@ -30,18 +30,20 @@ const SKUsPage = () => {
 	const updatSKU = async (id: string, price: number) => {
 		const token = Cookies.get("token");
 		if (id && token) {
-			console.log(price, "price");
-			const res = fetch(`${api}/sku/${id}`, {
-				method: "PUT",
-				body: JSON.stringify({ price }),
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`,
-				},
-			});
-			console.log(res);
-			fetchData();
-		} else return;
+			try {
+				await fetch(`${api}/sku/${id}`, {
+					method: "PUT",
+					body: JSON.stringify({ price }),
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+				});
+				fetchData();
+			} catch (error) {
+				console.log(error);
+			}
+		}
 	};
 	const [columnDefs] = useState<ColDef<SKUType>[]>([
 		{
@@ -80,7 +82,6 @@ const SKUsPage = () => {
 			headerName: "Price",
 			editable: true,
 			onCellValueChanged: (event) => {
-				console.log(event.data.id);
 				updatSKU(event.data.id, event.newValue);
 				setData((prevData: SKUType[]) => {
 					const updatedData = prevData.map((ele) =>
