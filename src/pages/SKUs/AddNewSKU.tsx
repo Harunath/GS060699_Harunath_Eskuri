@@ -93,7 +93,7 @@ const AddNewSKU = ({ close }: { close: () => void }) => {
 				<button
 					onClick={handleUpdate}
 					className="min-w-6 text-white px-6 py-2 rounded-lg transition shadow-md bg-blue-500 hover:bg-blue-600">
-					Add Store
+					Add SKU
 				</button>
 			</div>
 		</DialogCard>

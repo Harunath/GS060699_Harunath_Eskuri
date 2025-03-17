@@ -42,7 +42,7 @@ const Login = () => {
 	};
 
 	return (
-		<div className="flex min-h-screen items-center justify-center ">
+		<div className="flex min-h-screen min-w-[1080px] items-center justify-center ">
 			<div className="flex w-[80%] max-w-5xl  overflow-hidden">
 				{/* Left Section - Image & App Text */}
 				<div className="w-1/2 flex flex-col items-center justify-center p-8 border-r ">
