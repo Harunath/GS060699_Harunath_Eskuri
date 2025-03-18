@@ -27,13 +27,13 @@ const SKUsPage = () => {
 		if (data.length == 0) fetchData();
 	}, []);
 
-	const updatSKU = async (id: string, price: number) => {
+	const updatSKU = async (id: string, price: number, cost: number) => {
 		const token = Cookies.get("token");
-		if (id && token) {
+		if (id && token && price && cost) {
 			try {
 				await fetch(`${api}/sku/${id}`, {
 					method: "PUT",
-					body: JSON.stringify({ price }),
+					body: JSON.stringify({ price, cost }),
 					headers: {
 						"Content-Type": "application/json",
 						Authorization: `Bearer ${token}`,
@@ -82,7 +82,7 @@ const SKUsPage = () => {
 			headerName: "Price",
 			editable: true,
 			onCellValueChanged: (event) => {
-				updatSKU(event.data.id, event.newValue);
+				updatSKU(event.data.id, event.newValue, Number(event.data.cost));
 				setData((prevData: SKUType[]) => {
 					const updatedData = prevData.map((ele) =>
 						ele.id === event.data.id
@@ -102,6 +102,7 @@ const SKUsPage = () => {
 			headerName: "Cost",
 			editable: true,
 			onCellValueChanged: (event) => {
+				updatSKU(event.data.id, Number(event.data.price), event.newValue);
 				setData((prevData: SKUType[]) => {
 					const updatedData = prevData.map((ele) =>
 						ele.id === event.data.id
